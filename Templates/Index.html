@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<title>Orçamento Porta de Guilhotina</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+  body { font-family: 'Roboto', sans-serif; background: linear-gradient(135deg,#00c6ff,#0072ff); margin:0; padding:30px; display:flex; justify-content:center; }
+  .card { background:#fff; border-radius:12px; padding:26px; width:720px; box-shadow:0 12px 30px rgba(0,0,0,0.18); }
+  h2 { color:#0072ff; margin:0 0 18px 0; }
+  form label { display:block; margin-top:10px; font-weight:500; color:#333; }
+  form input[type="text"], form input[type="number"], form select { width:100%; padding:10px 12px; margin-top:6px; border-radius:8px; border:1px solid #ccc; font-size:14px; box-sizing:border-box; }
+  .row { display:flex; gap:12px; }
+  .row .col { flex:1; }
+  button { margin-top:14px; padding:12px 18px; border-radius:8px; border:none; background:#0072ff; color:#fff; cursor:pointer; font-weight:600; }
+  .resultado { margin-top:18px; font-size:16px; color:#222; }
+  .total { font-size:20px; color:#c00000; font-weight:800; margin-bottom:8px; }
+  table { width:100%; border-collapse:collapse; margin-top:10px; }
+  table th, table td { border:1px solid #eee; padding:8px 6px; text-align:left; font-size:13px; }
+  table th { background:#f5f7fb; }
+  .erro { color:#fff; background:#c00000; padding:8px; border-radius:6px; margin-top:8px; }
+  .btn-row { display:flex; justify-content:flex-end; gap:10px; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <h2>Formulário de Orçamento</h2>
+
+    <form method="POST" action="/calcular">
+      <label>Orçamento (ref): <input type="text" name="orcamento" value="{{ dados.orcamento or '' }}"></label>
+      <label>Nome do Cliente: <input type="text" name="cliente" value="{{ dados.cliente or '' }}"></label>
+
+      <div class="row">
+        <div class="col">
+          <label>Tipo da Porta:
+            <select name="porta" required>
+              {% set porta_sel = dados.get('porta', 'Simples') %}
+              <option value="Simples" {% if porta_sel=='Simples' %}selected{% endif %}>Simples</option>
+              <option value="Em L Esquerda" {% if porta_sel=='Em L Esquerda' %}selected{% endif %}>Em L Esquerda</option>
+              <option value="Em L Direita" {% if porta_sel=='Em L Direita' %}selected{% endif %}>Em L Direita</option>
+              <option value="Em U" {% if porta_sel=='Em U' %}selected{% endif %}>Em U</option>
+            </select>
+          </label>
+        </div>
+        <div class="col">
+          <label>Fechamento em Vidro:
+            <select name="vidro" required>
+              {% set vidro_sel = dados.get('vidro', 'Não') %}
+              <option value="Sim" {% if vidro_sel=='Sim' %}selected{% endif %}>Sim</option>
+              <option value="Não" {% if vidro_sel=='Não' %}selected{% endif %}>Não</option>
+            </select>
+          </label>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <label>Altura Total (cm): <input type="number" step="0.1" name="altura" required value="{{ dados.altura or '' }}"></label>
+        </div>
+        <div class="col">
+          <label>Largura da Porta (cm): <input type="number" step="0.1" name="largura" required value="{{ dados.largura or '' }}"></label>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <label>Profundidade Total (cm): <input type="number" step="0.1" name="profundidade" required value="{{ dados.profundidade or '' }}"></label>
+        </div>
+        <div class="col">
+          <label>Pedra instalada:
+            <select name="pedra" required>
+              {% set pedra_sel = dados.get('pedra', 'Não') %}
+              <option value="Não" {% if pedra_sel=='Não' %}selected{% endif %}>Não</option>
+              <option value="Sim" {% if pedra_sel=='Sim' %}selected{% endif %}>Sim</option>
+            </select>
+          </label>
+        </div>
+      </div>
+
+      <label>Altura da Boca (cm): <input type="number" step="0.1" name="altura_boca" value="{{ dados.altura_boca or 70 }}" required></label>
+
+      <div class="btn-row">
+        <button type="submit">Calcular Custo</button>
+        <button type="reset" style="background:#999;">Recalcular</button>
+      </div>
+    </form>
+
+    {% if resultado %}
+      {% if resultado.erro %}
+        <div class="erro">{{ resultado.mensagem }}</div>
+      {% else %}
+        <div class="resultado">
+          <div class="total">Custo de Produção: {{ resultado.custo_total_fmt }}</div>
+
+          <div><strong>Detalhamento:</strong></div>
+          <table>
+            <thead>
+              <tr><th>Item</th><th>Quantidade (m ou m²)</th><th>Preço unitário</th><th>Custo</th></tr>
+            </thead>
+            <tbody>
+            {% for d in resultado.detalhamento %}
+              <tr>
+                <td>{{ d.item }}</td>
+                <td style="width:140px">{{ d.quantidade }}</td>
+                <td style="width:140px">{{ d.preco_unit }}</td>
+                <td style="width:160px">{{ d.custo }}</td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% endif %}
+    {% endif %}
+  </div>
+</body>
+</html>
