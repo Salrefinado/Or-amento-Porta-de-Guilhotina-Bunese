@@ -2,7 +2,7 @@ from flask import Flask, render_template, request
 from markupsafe import escape
 import math
 
-app = Flask(__name__)
+mayn = Flask(__name__)
 
 def to_float(val, default=0.0):
     if val is None or str(val).strip() == "":
@@ -243,3 +243,4 @@ def calcular():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
