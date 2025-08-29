@@ -2,198 +2,222 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Orçamento Porta de Guilhotina</title>
 <style>
+  /* Fonte */
   @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
-  
-  body {
-    font-family: 'Roboto', sans-serif;
-    background: linear-gradient(135deg,#00c6ff,#0072ff);
-    margin:0;
-    padding:30px;
-    display:flex;
-    justify-content:center;
+
+  /* Variáveis controladas por JS também */
+  :root{
+    --card-max-width: 720px;
+    --body-padding: 30px;
+    --base-font-size: 16px;
+    --input-height: 44px;
+    --gap: 12px;
+    --card-radius: 12px;
   }
 
+  html,body{
+    height:100%;
+    margin:0;
+  }
+
+  body {
+    font-family: 'Roboto', sans-serif;
+    font-size: var(--base-font-size);
+    background: linear-gradient(135deg,#00c6ff,#0072ff);
+    padding: var(--body-padding);
+    display:flex;
+    justify-content:center;
+    align-items: flex-start;
+    box-sizing: border-box;
+  }
+
+  /* Card central responsivo */
   .card {
+    width: 100%;
+    max-width: var(--card-max-width);
     background:#fff;
-    border-radius:12px;
-    padding:26px;
-    width:720px;
+    border-radius: var(--card-radius);
+    padding: calc(var(--gap) * 2);
     box-shadow:0 12px 30px rgba(0,0,0,0.18);
     box-sizing: border-box;
   }
 
-  h2 { color:#0072ff; margin:0 0 18px 0; }
+  h2 {
+    color:#0072ff;
+    margin:0 0 10px 0;
+    font-size: 1.25rem;
+  }
 
-  form label { display:block; margin-top:10px; font-weight:500; color:#333; }
-  form input[type="text"], form input[type="number"], form select {
+  /* Cada campo em uma linha (lista) */
+  .field {
+    display:block;
     width:100%;
-    padding:10px 12px;
-    margin-top:6px;
+    margin-bottom: var(--gap);
+  }
+  .field label {
+    display:block;
+    font-weight:500;
+    color:#333;
+    margin-bottom:6px;
+  }
+  .field input[type="text"],
+  .field input[type="number"],
+  .field select {
+    width:100%;
+    height: var(--input-height);
+    padding: 10px 12px;
     border-radius:8px;
     border:1px solid #ccc;
-    font-size:14px;
+    font-size: 0.95rem;
     box-sizing:border-box;
   }
 
-  .row { display:flex; gap:12px; flex-wrap: wrap; }
-  .row .col { flex:1; min-width:200px; }
-
-  button {
-    margin-top:14px;
-    padding:12px 18px;
+  /* Botões empilhados um abaixo do outro */
+  .btn-row {
+    display:flex;
+    flex-direction: column; /* sempre vertical, como pediu */
+    gap:10px;
+    margin-top:8px;
+  }
+  .btn-row button,
+  .btn-row a {
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:100%;
+    height:48px;
     border-radius:8px;
     border:none;
-    background:#0072ff;
+    text-decoration:none;
     color:#fff;
-    cursor:pointer;
     font-weight:600;
+    font-family:'Roboto', sans-serif;
+    font-size:1rem;
   }
+  .btn-primary { background:#0072ff; }
+  .btn-secondary { background:#999; }
 
-  .resultado { margin-top:18px; font-size:16px; color:#222; }
-  .total { font-size:20px; color:#c00000; font-weight:800; margin-bottom:8px; }
+  /* Resultado */
+  .resultado { margin-top:18px; font-size:0.97rem; color:#222; }
+  .total { font-size:1.15rem; color:#c00000; font-weight:800; margin-bottom:8px; }
+  .detalhamento-title { margin-top:6px; font-weight:700; }
 
-  table { width:100%; border-collapse:collapse; margin-top:10px; }
-  table th, table td { border:1px solid #eee; padding:8px 6px; text-align:left; font-size:13px; }
+  /* Tabela responsiva (scroll horizontal se necessário) */
+  .table-wrap { width:100%; overflow:auto; margin-top:10px; }
+  table { width:100%; border-collapse:collapse; min-width:600px; }
+  table th, table td { border:1px solid #eee; padding:8px 6px; text-align:left; font-size:0.92rem; }
   table th { background:#f5f7fb; }
 
   .erro { color:#fff; background:#c00000; padding:8px; border-radius:6px; margin-top:8px; }
 
-  .btn-row {
-    display:flex;
-    justify-content:flex-end;
-    gap:10px;
-    flex-wrap: wrap;
-  }
-  .btn-row a, .btn-row button {
-    flex:1;
-    min-width:120px;
+  /* Pequenos ajustes para telas muito pequenas */
+  @media (max-width: 420px) {
+    :root{ --base-font-size:15px; --input-height:42px; --card-radius:10px; --gap:10px; }
+    h2 { font-size:1.05rem; }
+    table { min-width:480px; }
   }
 
-  /* -------------------------
-     Responsivo para celular
-  ------------------------- */
-  @media (max-width: 768px) {
-    body { padding:15px; }
-    .card { width:100%; padding:20px; }
-    .row { flex-direction: column; gap:10px; }
-    .btn-row { flex-direction: column; gap:10px; }
+  /* Se quiser comportamento específico para desktop muito largo */
+  @media (min-width: 1400px) {
+    :root{ --card-max-width: 1000px; }
   }
 
-  @media (max-width: 480px) {
-    h2 { font-size:18px; }
-    form input[type="text"], form input[type="number"], form select { font-size:13px; padding:8px 10px; }
-    table th, table td { font-size:12px; padding:6px 4px; }
-    .total { font-size:18px; }
-  }
+  /* estilo estético extra para espaçamento do form */
+  .small-note { font-size:0.85rem; color:#666; margin-top:6px; }
 </style>
+
+<script>
+  // Ajusta layout dinamicamente conforme a largura da tela.
+  function ajustarLayout() {
+    const w = window.innerWidth || document.documentElement.clientWidth;
+    const root = document.documentElement.style;
+
+    // Determina largura máxima do card
+    if (w >= 1400) {
+      root.setProperty('--card-max-width', '1000px');
+      root.setProperty('--body-padding', '40px');
+    } else if (w >= 1100) {
+      root.setProperty('--card-max-width', '900px');
+      root.setProperty('--body-padding', '36px');
+    } else if (w >= 900) {
+      root.setProperty('--card-max-width', '720px');
+      root.setProperty('--body-padding', '30px');
+    } else if (w >= 600) {
+      root.setProperty('--card-max-width', '600px');
+      root.setProperty('--body-padding', '20px');
+    } else {
+      // mobile: aproveita toda a largura com padding lateral
+      root.setProperty('--card-max-width', '100%');
+      root.setProperty('--body-padding', '12px');
+    }
+
+    // Ajusta font-size base proporcionalmente (entre 14 e 18)
+    const base = Math.max(14, Math.min(18, Math.round(w / 60)));
+    root.setProperty('--base-font-size', base + 'px');
+
+    // Ajusta input height proporcionalmente (entre 40 e 52)
+    const inputH = Math.max(40, Math.min(52, Math.round(base * 2.8)));
+    root.setProperty('--input-height', inputH + 'px');
+
+    // otimização: reduz min-width da tabela em telas pequenas
+    const table = document.querySelector('table');
+    if (table) {
+      if (w < 420) table.style.minWidth = '480px';
+      else table.style.minWidth = '';
+    }
+  }
+
+  window.addEventListener('load', ajustarLayout);
+  window.addEventListener('resize', function() {
+    // Debounce simples para evitar chamadas excessivas
+    clearTimeout(window.__ajustarLayoutTimeout);
+    window.__ajustarLayoutTimeout = setTimeout(ajustarLayout, 80);
+  });
+</script>
 </head>
 <body>
   <div class="card">
     <h2>Formulário de Orçamento</h2>
 
-    <form method="POST" action="/calcular">
-      <label>Orçamento (ref): <input type="text" name="orcamento" value="{{ dados.orcamento or '' }}"></label>
-      <label>Nome do Cliente: <input type="text" name="cliente" value="{{ dados.cliente or '' }}"></label>
-
-      <div class="row">
-        <div class="col">
-          <label>Tipo da Porta:
-            <select name="porta" required>
-              {% set porta_sel = dados.get('porta', 'Simples') %}
-              <option value="Simples" {% if porta_sel=='Simples' %}selected{% endif %}>Simples</option>
-              <option value="Em L Esquerda" {% if porta_sel=='Em L Esquerda' %}selected{% endif %}>Em L Esquerda</option>
-              <option value="Em L Direita" {% if porta_sel=='Em L Direita' %}selected{% endif %}>Em L Direita</option>
-              <option value="Em U" {% if porta_sel=='Em U' %}selected{% endif %}>Em U</option>
-            </select>
-          </label>
-        </div>
-        <div class="col">
-          <label>Fechamento em Vidro:
-            <select name="vidro" required>
-              {% set vidro_sel = dados.get('vidro', 'Não') %}
-              <option value="Sim" {% if vidro_sel=='Sim' %}selected{% endif %}>Sim</option>
-              <option value="Não" {% if vidro_sel=='Não' %}selected{% endif %}>Não</option>
-            </select>
-          </label>
-        </div>
+    <form method="POST" action="/calcular" novalidate>
+      <div class="field">
+        <label for="orcamento">Orçamento (ref):</label>
+        <input id="orcamento" type="text" name="orcamento" value="{{ dados.orcamento or '' }}">
       </div>
 
-      <div class="row">
-        <div class="col">
-          <label>Altura Total (cm): <input type="number" step="0.1" name="altura" required value="{{ dados.altura or '' }}"></label>
-        </div>
-        <div class="col">
-          <label>Largura da Porta (cm): <input type="number" step="0.1" name="largura" required value="{{ dados.largura or '' }}"></label>
-        </div>
+      <div class="field">
+        <label for="cliente">Nome do Cliente:</label>
+        <input id="cliente" type="text" name="cliente" value="{{ dados.cliente or '' }}">
       </div>
 
-      <div class="row">
-        <div class="col">
-          <label>Profundidade Total (cm): <input type="number" step="0.1" name="profundidade" required value="{{ dados.profundidade or '' }}"></label>
-        </div>
-        <div class="col">
-          <label>Pedra instalada:
-            <select name="pedra" required>
-              {% set pedra_sel = dados.get('pedra', 'Não') %}
-              <option value="Não" {% if pedra_sel=='Não' %}selected{% endif %}>Não</option>
-              <option value="Sim" {% if pedra_sel=='Sim' %}selected{% endif %}>Sim</option>
-            </select>
-          </label>
-        </div>
+      <div class="field">
+        <label for="porta">Tipo da Porta:</label>
+        <select id="porta" name="porta" required>
+          {% set porta_sel = dados.get('porta', 'Simples') %}
+          <option value="Simples" {% if porta_sel=='Simples' %}selected{% endif %}>Simples</option>
+          <option value="Em L Esquerda" {% if porta_sel=='Em L Esquerda' %}selected{% endif %}>Em L Esquerda</option>
+          <option value="Em L Direita" {% if porta_sel=='Em L Direita' %}selected{% endif %}>Em L Direita</option>
+          <option value="Em U" {% if porta_sel=='Em U' %}selected{% endif %}>Em U</option>
+        </select>
       </div>
 
-      <label>Altura da Boca (cm): <input type="number" step="0.1" name="altura_boca" value="{{ dados.altura_boca or 70 }}" required></label>
+      <div class="field">
+        <label for="vidro">Fechamento em Vidro:</label>
+        <select id="vidro" name="vidro" required>
+          {% set vidro_sel = dados.get('vidro', 'Não') %}
+          <option value="Sim" {% if vidro_sel=='Sim' %}selected{% endif %}>Sim</option>
+          <option value="Não" {% if vidro_sel=='Não' %}selected{% endif %}>Não</option>
+        </select>
+      </div>
 
-      <div class="btn-row" style="display:flex; gap:10px; margin-top:14px; align-items:center;">
-  <button type="submit"
-    style="flex:1; height:45px; display:flex; align-items:center; justify-content:center;
-           padding:0; margin:0; border-radius:8px; border:none; background:#0072ff; color:#fff;
-           font-weight:600; font-family:'Roboto',sans-serif; font-size:15px; line-height:1;
-           box-sizing:border-box; -webkit-appearance:none; appearance:none; vertical-align:middle;">
-    Calcular Custo
-  </button>
+      <div class="field">
+        <label for="altura">Altura Total (cm):</label>
+        <input id="altura" type="number" step="0.1" name="altura" required value="{{ dados.altura or '' }}">
+      </div>
 
-  <a href="/"
-     role="button"
-     style="flex:1; height:45px; display:flex; align-items:center; justify-content:center;
-            padding:0; margin:0; border-radius:8px; background:#999; color:#fff; text-decoration:none;
-            font-weight:600; font-family:'Roboto',sans-serif; font-size:15px; line-height:1;
-            box-sizing:border-box; border:none; vertical-align:middle;">
-    Recalcular
-  </a>
-</div>
-
-
-    </form>
-
-    {% if resultado %}
-      {% if resultado.erro %}
-        <div class="erro">{{ resultado.mensagem }}</div>
-      {% else %}
-        <div class="resultado">
-          <div class="total">Custo de Produção: {{ resultado.custo_total_fmt }}</div>
-
-          <div><strong>Detalhamento:</strong></div>
-          <table>
-            <thead>
-              <tr><th>Item</th><th>Quantidade (m ou m²)</th><th>Preço unitário</th><th>Custo</th></tr>
-            </thead>
-            <tbody>
-            {% for d in resultado.detalhamento %}
-              <tr>
-                <td>{{ d.item }}</td>
-                <td style="width:140px">{{ d.quantidade }}</td>
-                <td style="width:140px">{{ d.preco_unit }}</td>
-                <td style="width:160px">{{ d.custo }}</td>
-              </tr>
-            {% endfor %}
-            </tbody>
-          </table>
-        </div>
-      {% endif %}
-    {% endif %}
-  </div>
-</body>
-</html>
+      <div class="field">
+        <label for="largura">Largura da Porta (cm):</label>
+        <input id="largura" type="n
