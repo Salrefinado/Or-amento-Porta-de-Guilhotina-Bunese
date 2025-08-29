@@ -5,21 +5,88 @@
 <title>Orçamento Porta de Guilhotina</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
-  body { font-family: 'Roboto', sans-serif; background: linear-gradient(135deg,#00c6ff,#0072ff); margin:0; padding:30px; display:flex; justify-content:center; }
-  .card { background:#fff; border-radius:12px; padding:26px; width:720px; box-shadow:0 12px 30px rgba(0,0,0,0.18); }
+  
+  body {
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(135deg,#00c6ff,#0072ff);
+    margin:0;
+    padding:30px;
+    display:flex;
+    justify-content:center;
+  }
+
+  .card {
+    background:#fff;
+    border-radius:12px;
+    padding:26px;
+    width:720px;
+    box-shadow:0 12px 30px rgba(0,0,0,0.18);
+    box-sizing: border-box;
+  }
+
   h2 { color:#0072ff; margin:0 0 18px 0; }
+
   form label { display:block; margin-top:10px; font-weight:500; color:#333; }
-  form input[type="text"], form input[type="number"], form select { width:100%; padding:10px 12px; margin-top:6px; border-radius:8px; border:1px solid #ccc; font-size:14px; box-sizing:border-box; }
-  .row { display:flex; gap:12px; }
-  .row .col { flex:1; }
-  button { margin-top:14px; padding:12px 18px; border-radius:8px; border:none; background:#0072ff; color:#fff; cursor:pointer; font-weight:600; }
+  form input[type="text"], form input[type="number"], form select {
+    width:100%;
+    padding:10px 12px;
+    margin-top:6px;
+    border-radius:8px;
+    border:1px solid #ccc;
+    font-size:14px;
+    box-sizing:border-box;
+  }
+
+  .row { display:flex; gap:12px; flex-wrap: wrap; }
+  .row .col { flex:1; min-width:200px; }
+
+  button {
+    margin-top:14px;
+    padding:12px 18px;
+    border-radius:8px;
+    border:none;
+    background:#0072ff;
+    color:#fff;
+    cursor:pointer;
+    font-weight:600;
+  }
+
   .resultado { margin-top:18px; font-size:16px; color:#222; }
   .total { font-size:20px; color:#c00000; font-weight:800; margin-bottom:8px; }
+
   table { width:100%; border-collapse:collapse; margin-top:10px; }
   table th, table td { border:1px solid #eee; padding:8px 6px; text-align:left; font-size:13px; }
   table th { background:#f5f7fb; }
+
   .erro { color:#fff; background:#c00000; padding:8px; border-radius:6px; margin-top:8px; }
-  .btn-row { display:flex; justify-content:flex-end; gap:10px; }
+
+  .btn-row {
+    display:flex;
+    justify-content:flex-end;
+    gap:10px;
+    flex-wrap: wrap;
+  }
+  .btn-row a, .btn-row button {
+    flex:1;
+    min-width:120px;
+  }
+
+  /* -------------------------
+     Responsivo para celular
+  ------------------------- */
+  @media (max-width: 768px) {
+    body { padding:15px; }
+    .card { width:100%; padding:20px; }
+    .row { flex-direction: column; gap:10px; }
+    .btn-row { flex-direction: column; gap:10px; }
+  }
+
+  @media (max-width: 480px) {
+    h2 { font-size:18px; }
+    form input[type="text"], form input[type="number"], form select { font-size:13px; padding:8px 10px; }
+    table th, table td { font-size:12px; padding:6px 4px; }
+    .total { font-size:18px; }
+  }
 </style>
 </head>
 <body>
@@ -130,8 +197,3 @@
   </div>
 </body>
 </html>
-
-
-
-
-
