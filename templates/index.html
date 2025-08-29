@@ -155,7 +155,7 @@
       <div class="field">
         <label class="field-label">Fechamento em Vidro:</label>
         <select name="vidro" required>
-          {% set vidro_sel = dados.get('vidro', 'Não') %}
+          {% set vidro_sel = dados.get('vidro', 'Sim') %}
           <option value="Sim" {% if vidro_sel=='Sim' %}selected{% endif %}>Sim</option>
           <option value="Não" {% if vidro_sel=='Não' %}selected{% endif %}>Não</option>
         </select>
@@ -275,3 +275,4 @@
   </script>
 </body>
 </html>
+
