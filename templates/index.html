@@ -1,138 +1,277 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8" />
-<title>Orçamento Porta de Guilhotina</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
-  body { font-family: 'Roboto', sans-serif; background: linear-gradient(135deg,#00c6ff,#0072ff); margin:0; padding:30px; display:flex; justify-content:center; }
-  .card { background:#fff; border-radius:12px; padding:26px; width:720px; box-shadow:0 12px 30px rgba(0,0,0,0.18); }
-  h2 { color:#0072ff; margin:0 0 18px 0; }
-  form label { display:block; margin-top:10px; font-weight:500; color:#333; }
-  form input[type="text"], form input[type="number"], form select { width:100%; padding:10px 12px; margin-top:6px; border-radius:8px; border:1px solid #ccc; font-size:14px; box-sizing:border-box; }
-  .row { display:flex; gap:12px; }
-  .row .col { flex:1; }
-  button { margin-top:14px; padding:12px 18px; border-radius:8px; border:none; background:#0072ff; color:#fff; cursor:pointer; font-weight:600; }
-  .resultado { margin-top:18px; font-size:16px; color:#222; }
-  .total { font-size:20px; color:#c00000; font-weight:800; margin-bottom:8px; }
-  table { width:100%; border-collapse:collapse; margin-top:10px; }
-  table th, table td { border:1px solid #eee; padding:8px 6px; text-align:left; font-size:13px; }
-  table th { background:#f5f7fb; }
-  .erro { color:#fff; background:#c00000; padding:8px; border-radius:6px; margin-top:8px; }
-  .btn-row { display:flex; justify-content:flex-end; gap:10px; }
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Orçamento Porta de Guilhotina</title>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+    :root{
+      --bg-gradient: linear-gradient(135deg,#00c6ff,#0072ff);
+      --card-max-width: 720px;
+      --card-padding: 26px;
+      --control-gap: 12px;
+      --field-height: 46px;
+      --radius: 12px;
+      --font-family: 'Roboto', sans-serif;
+    }
+
+    /* Reset / base */
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body {
+      margin:0;
+      font-family: var(--font-family);
+      background: var(--bg-gradient);
+      -webkit-font-smoothing:antialiased;
+      display:flex;
+      justify-content:center;
+      align-items:flex-start;
+      padding:22px;
+    }
+
+    /* Card */
+    .card {
+      width: 100%;
+      max-width: var(--card-max-width);
+      background: #fff;
+      border-radius: var(--radius);
+      padding: calc(var(--card-padding));
+      box-shadow: 0 12px 30px rgba(0,0,0,0.18);
+    }
+
+    h2 {
+      color:#0072ff;
+      margin:0 0 14px 0;
+      font-size: 1.25rem;
+    }
+
+    form { display:block; width:100% }
+
+    .field {
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+      margin-bottom: var(--control-gap);
+    }
+
+    label.field-label { font-weight:500; color:#333; font-size:0.95rem; }
+
+    input[type="text"], input[type="number"], select {
+      height: var(--field-height);
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid #d6dbe6;
+      font-size: 0.95rem;
+      outline: none;
+    }
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+
+    /* Buttons stacked vertically */
+    .actions {
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      margin-top:8px;
+    }
+    .btn {
+      height:48px;
+      border-radius:10px;
+      border:none;
+      cursor:pointer;
+      font-weight:700;
+      font-size:0.98rem;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      -webkit-appearance:none;
+      appearance:none;
+      text-decoration:none;
+      color:#fff;
+    }
+    .btn-primary { background:#0072ff; }
+    .btn-secondary { background:#999; }
+
+    /* Resultado */
+    .resultado { margin-top:18px; font-size:0.95rem; color:#222; }
+    .total { font-size:1.05rem; color:#c00000; font-weight:800; margin-bottom:8px; }
+    .table-wrap { width:100%; overflow:auto; margin-top:8px; border-radius:8px; }
+    table { width:100%; border-collapse:collapse; min-width:600px; }
+    table th, table td { border:1px solid #eee; padding:8px 6px; text-align:left; font-size:0.92rem; }
+    table th { background:#f5f7fb; }
+
+    .erro { color:#fff; background:#c00000; padding:10px; border-radius:8px; margin-top:8px; }
+
+    /* Small screens tweaks */
+    @media (max-width:420px){
+      :root{
+        --card-padding: 18px;
+        --control-gap: 10px;
+        --field-height:44px;
+      }
+      table { min-width:540px; }
+    }
+
+    /* Large screens */
+    @media (min-width:1200px){
+      :root{
+        --card-padding:32px;
+        --control-gap:14px;
+        --field-height:48px;
+        --card-max-width: 920px;
+      }
+    }
+  </style>
 </head>
 <body>
-  <div class="card">
-    <h2>Formulário de Orçamento</h2>
+  <div class="card" role="main" aria-labelledby="titulo">
+    <h2 id="titulo">Formulário de Orçamento</h2>
 
-    <form method="POST" action="/calcular">
-      <label>Orçamento (ref): <input type="text" name="orcamento" value="{{ dados.orcamento or '' }}"></label>
-      <label>Nome do Cliente: <input type="text" name="cliente" value="{{ dados.cliente or '' }}"></label>
-
-      <div class="row">
-        <div class="col">
-          <label>Tipo da Porta:
-            <select name="porta" required>
-              {% set porta_sel = dados.get('porta', 'Simples') %}
-              <option value="Simples" {% if porta_sel=='Simples' %}selected{% endif %}>Simples</option>
-              <option value="Em L Esquerda" {% if porta_sel=='Em L Esquerda' %}selected{% endif %}>Em L Esquerda</option>
-              <option value="Em L Direita" {% if porta_sel=='Em L Direita' %}selected{% endif %}>Em L Direita</option>
-              <option value="Em U" {% if porta_sel=='Em U' %}selected{% endif %}>Em U</option>
-            </select>
-          </label>
-        </div>
-        <div class="col">
-          <label>Fechamento em Vidro:
-            <select name="vidro" required>
-              {% set vidro_sel = dados.get('vidro', 'Não') %}
-              <option value="Sim" {% if vidro_sel=='Sim' %}selected{% endif %}>Sim</option>
-              <option value="Não" {% if vidro_sel=='Não' %}selected{% endif %}>Não</option>
-            </select>
-          </label>
-        </div>
+    <form method="POST" action="/calcular" novalidate>
+      <div class="field">
+        <label class="field-label">Orçamento (ref):</label>
+        <input type="text" name="orcamento" value="{{ dados.orcamento or '' }}" />
       </div>
 
-      <div class="row">
-        <div class="col">
-          <label>Altura Total (cm): <input type="number" step="0.1" name="altura" required value="{{ dados.altura or '' }}"></label>
-        </div>
-        <div class="col">
-          <label>Largura da Porta (cm): <input type="number" step="0.1" name="largura" required value="{{ dados.largura or '' }}"></label>
-        </div>
+      <div class="field">
+        <label class="field-label">Nome do Cliente:</label>
+        <input type="text" name="cliente" value="{{ dados.cliente or '' }}" />
       </div>
 
-      <div class="row">
-        <div class="col">
-          <label>Profundidade Total (cm): <input type="number" step="0.1" name="profundidade" required value="{{ dados.profundidade or '' }}"></label>
-        </div>
-        <div class="col">
-          <label>Pedra instalada:
-            <select name="pedra" required>
-              {% set pedra_sel = dados.get('pedra', 'Não') %}
-              <option value="Não" {% if pedra_sel=='Não' %}selected{% endif %}>Não</option>
-              <option value="Sim" {% if pedra_sel=='Sim' %}selected{% endif %}>Sim</option>
-            </select>
-          </label>
-        </div>
+      <div class="field">
+        <label class="field-label">Tipo da Porta:</label>
+        <select name="porta" required>
+          {% set porta_sel = dados.get('porta', 'Simples') %}
+          <option value="Simples" {% if porta_sel=='Simples' %}selected{% endif %}>Simples</option>
+          <option value="Em L Esquerda" {% if porta_sel=='Em L Esquerda' %}selected{% endif %}>Em L Esquerda</option>
+          <option value="Em L Direita" {% if porta_sel=='Em L Direita' %}selected{% endif %}>Em L Direita</option>
+          <option value="Em U" {% if porta_sel=='Em U' %}selected{% endif %}>Em U</option>
+        </select>
       </div>
 
-      <label>Altura da Boca (cm): <input type="number" step="0.1" name="altura_boca" value="{{ dados.altura_boca or 70 }}" required></label>
+      <div class="field">
+        <label class="field-label">Fechamento em Vidro:</label>
+        <select name="vidro" required>
+          {% set vidro_sel = dados.get('vidro', 'Não') %}
+          <option value="Sim" {% if vidro_sel=='Sim' %}selected{% endif %}>Sim</option>
+          <option value="Não" {% if vidro_sel=='Não' %}selected{% endif %}>Não</option>
+        </select>
+      </div>
 
-      <div class="btn-row" style="display:flex; justify-content:space-between; margin-top:14px; gap:10px;">
-  <button type="submit" 
-          style="flex:1; height:45px; display:flex; align-items:center; justify-content:center;
-                 border-radius:8px; border:none; background:#0072ff; color:#fff; font-weight:600; box-sizing:border-box;">
-      <div class="btn-row" style="display:flex; gap:10px; margin-top:14px; align-items:center;">
-  <button type="submit"
-    style="flex:1; height:45px; display:flex; align-items:center; justify-content:center;
-           padding:0; margin:0; border-radius:8px; border:none; background:#0072ff; color:#fff;
-           font-weight:600; font-family:'Roboto',sans-serif; font-size:15px; line-height:1;
-           box-sizing:border-box; -webkit-appearance:none; appearance:none; vertical-align:middle;">
-    Calcular Custo
-  </button>
-  <a href="/" 
+      <div class="field">
+        <label class="field-label">Altura Total (cm):</label>
+        <input type="number" step="0.1" name="altura" required value="{{ dados.altura or '' }}">
+      </div>
 
-  <a href="/"
-     role="button"
-     style="flex:1; height:45px; display:flex; align-items:center; justify-content:center;
-            border-radius:8px; background:#999; color:#fff; text-decoration:none; font-weight:600; box-sizing:border-box;">
-            padding:0; margin:0; border-radius:8px; background:#999; color:#fff; text-decoration:none;
-            font-weight:600; font-family:'Roboto',sans-serif; font-size:15px; line-height:1;
-            box-sizing:border-box; border:none; vertical-align:middle;">
-    Recalcular
-  </a>
-</div>
+      <div class="field">
+        <label class="field-label">Largura da Porta (cm):</label>
+        <input type="number" step="0.1" name="largura" required value="{{ dados.largura or '' }}">
+      </div>
 
+      <div class="field">
+        <label class="field-label">Profundidade Total (cm):</label>
+        <input type="number" step="0.1" name="profundidade" required value="{{ dados.profundidade or '' }}">
+      </div>
 
+      <div class="field">
+        <label class="field-label">Pedra instalada:</label>
+        <select name="pedra" required>
+          {% set pedra_sel = dados.get('pedra', 'Não') %}
+          <option value="Não" {% if pedra_sel=='Não' %}selected{% endif %}>Não</option>
+          <option value="Sim" {% if pedra_sel=='Sim' %}selected{% endif %}>Sim</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label class="field-label">Altura da Boca (cm):</label>
+        <input type="number" step="0.1" name="altura_boca" value="{{ dados.altura_boca or 70 }}" required>
+      </div>
+
+      <div class="actions" aria-hidden="false">
+        <button type="submit" class="btn btn-primary">Calcular Custo</button>
+        <a href="/" class="btn btn-secondary" role="button">Recalcular</a>
+      </div>
     </form>
 
     {% if resultado %}
       {% if resultado.erro %}
-        <div class="erro">{{ resultado.mensagem }}</div>
+        <div class="erro" role="alert">{{ resultado.mensagem }}</div>
       {% else %}
-        <div class="resultado">
+        <div class="resultado" aria-live="polite">
           <div class="total">Custo de Produção: {{ resultado.custo_total_fmt }}</div>
 
           <div><strong>Detalhamento:</strong></div>
-          <table>
-            <thead>
-              <tr><th>Item</th><th>Quantidade (m ou m²)</th><th>Preço unitário</th><th>Custo</th></tr>
-            </thead>
-            <tbody>
-            {% for d in resultado.detalhamento %}
-              <tr>
-                <td>{{ d.item }}</td>
-                <td style="width:140px">{{ d.quantidade }}</td>
-                <td style="width:140px">{{ d.preco_unit }}</td>
-                <td style="width:160px">{{ d.custo }}</td>
-              </tr>
-            {% endfor %}
-            </tbody>
-          </table>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>Item</th><th>Quantidade (m ou m²)</th><th>Preço unitário</th><th>Custo</th></tr>
+              </thead>
+              <tbody>
+              {% for d in resultado.detalhamento %}
+                <tr>
+                  <td>{{ d.item }}</td>
+                  <td style="width:140px">{{ d.quantidade }}</td>
+                  <td style="width:140px">{{ d.preco_unit }}</td>
+                  <td style="width:160px">{{ d.custo }}</td>
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+          </div>
         </div>
       {% endif %}
     {% endif %}
   </div>
+
+  <script>
+    // Ajusta variáveis CSS e font-size base conforme window.innerWidth
+    (function(){
+      const root = document.documentElement;
+
+      function adjustLayout(){
+        const w = window.innerWidth;
+        // Ajuste simples por faixas para compatibilidade iPhone/desktop
+        let baseFont;
+        if (w <= 420) {
+          baseFont = 15;              // iPhone portrait
+          root.style.setProperty('--card-max-width', '96vw');
+          root.style.setProperty('--card-padding', '18px');
+          root.style.setProperty('--control-gap', '10px');
+        } else if (w <= 900) {
+          baseFont = 16;
+          root.style.setProperty('--card-max-width', '720px');
+          root.style.setProperty('--card-padding', '22px');
+          root.style.setProperty('--control-gap', '12px');
+        } else if (w <= 1400) {
+          baseFont = 17;
+          root.style.setProperty('--card-max-width', '860px');
+          root.style.setProperty('--card-padding', '26px');
+          root.style.setProperty('--control-gap', '13px');
+        } else {
+          baseFont = 18;
+          root.style.setProperty('--card-max-width', '920px');
+          root.style.setProperty('--card-padding', '32px');
+          root.style.setProperty('--control-gap', '14px');
+        }
+
+        // aplica font-size base (uso em rems no CSS)
+        root.style.fontSize = baseFont + "px";
+
+        // pequenas melhorias de toque em telas pequenas
+        if (w <= 420) {
+          root.style.setProperty('--field-height', '44px');
+        } else {
+          root.style.setProperty('--field-height', '46px');
+        }
+      }
+
+      window.addEventListener('resize', adjustLayout, { passive: true });
+      window.addEventListener('orientationchange', adjustLayout);
+      window.addEventListener('load', adjustLayout);
+    })();
+  </script>
 </body>
 </html>
