@@ -79,9 +79,15 @@
 
       <label>Altura da Boca (cm): <input type="number" step="0.1" name="altura_boca" value="{{ dados.altura_boca or 70 }}" required></label>
 
-      <div class="btn-row">
-  <button type="submit">Calcular Custo</button>
-  <a href="/" style="padding:12px 18px; background:#999; color:#fff; border-radius:8px; text-decoration:none;">Recalcular</a>
+      <div class="btn-row" style="display:flex; justify-content:space-between; margin-top:14px; gap:0;">
+  <button type="submit" 
+          style="flex:1; margin-right:10px; padding:12px 0; border-radius:8px; border:none; background:#0072ff; color:#fff; font-weight:600;">
+    Calcular Custo
+  </button>
+  <a href="/" 
+     style="flex:1; margin-left:10px; padding:12px 0; display:inline-flex; align-items:center; justify-content:center; border-radius:8px; background:#999; color:#fff; text-decoration:none; font-weight:600;">
+    Recalcular
+  </a>
 </div>
 
     </form>
@@ -115,4 +121,5 @@
   </div>
 </body>
 </html>
+
 
