@@ -241,8 +241,13 @@ def calcular():
 
     return render_template("index.html", resultado=resumo, dados=dados)
 
+import os
+
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))  # Render define a porta
+    app.run(host="0.0.0.0", port=port, debug=True)
+
+
 
 
 
