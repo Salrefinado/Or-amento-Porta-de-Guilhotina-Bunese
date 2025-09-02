@@ -66,6 +66,7 @@
       border: 1px solid #d6dbe6;
       font-size: 0.95rem;
       outline: none;
+      width: 100%;
     }
     input[type="number"]::-webkit-inner-spin-button,
     input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
@@ -248,6 +249,32 @@
       window.addEventListener('orientationchange', adjustLayout);
       window.addEventListener('load', adjustLayout);
     })();
+  </script>
+
+  <script>
+    // Toggle da visibilidade do campo 'Profundidade' conforme tipo de porta.
+    // O campo é escondido quando 'Simples' e mostrado para os demais tipos.
+    // Mantém a posição e o tamanho dos demais campos: apenas altera display do próprio field.
+    window.addEventListener('load', () => {
+      const portaSelect = document.querySelector('select[name="porta"]');
+      const profundInput = document.querySelector('input[name="profundidade"]');
+      if (!portaSelect || !profundInput) return;
+      const profundField = profundInput.closest('.field');
+
+      const toggleProfund = () => {
+        if (portaSelect.value === 'Simples') {
+          profundField.style.display = 'none';
+          profundInput.required = false;
+        } else {
+          profundField.style.display = 'flex';
+          profundInput.required = true;
+        }
+      };
+
+      // inicializa conforme valor atual (útil quando o template já traz um valor selecionado)
+      toggleProfund();
+      portaSelect.addEventListener('change', toggleProfund);
+    });
   </script>
 </body>
 </html>
