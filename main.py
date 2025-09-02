@@ -237,8 +237,16 @@ def calcular_custo_total(dados):
     # Consumíveis (fixo)
     consumiveis_valor = 50
 
-    # Deslocação (fixo)
-    deslocacao_valor = 100
+    # Instalação (substitui a antiga Deslocação) - tabela por tipo e largura
+    # Valores em R$ conforme especificado pelo usuário
+    if porta == "Simples":
+        instalacao_valor = 390 if largura_porta <= 70 else 430
+    elif porta in ["Em L Esquerda", "Em L Direita"]:
+        instalacao_valor = 470 if largura_porta <= 70 else 550
+    elif porta == "Em U":
+        instalacao_valor = 600 if largura_porta <= 70 else 700
+    else:
+        instalacao_valor = 0
 
     # Contrapeso (apenas vidro frontal) R$300 / m²
     contrapeso_unit = 300
@@ -267,8 +275,8 @@ def calcular_custo_total(dados):
     adicionais = [
         ("Mão de obra", 1, mao_valor, mao_valor),
         ("Consumíveis", 1, consumiveis_valor, consumiveis_valor),
-        ("Deslocação", 1, deslocacao_valor, deslocacao_valor),
-        ("Contrapeso", frontal_area_m2, contrapeso_unit, contrapeso_valor),
+        ("Instalação", 1, instalacao_valor, instalacao_valor),
+        ("Contrapeso (vidro frontal)", frontal_area_m2, contrapeso_unit, contrapeso_valor),
         ("Revestimento", 1, revestimento_valor, revestimento_valor),
         ("Parafusos", 1, parafusos_valor, parafusos_valor),
     ]
