@@ -270,7 +270,7 @@ def calcular_custo_total(dados):
         ("Mão de obra", 1, mao_valor, mao_valor),
         ("Consumíveis", 1, consumiveis_valor, consumiveis_valor),
         ("Deslocação", 1, deslocacao_valor, deslocacao_valor),
-        ("Contrapeso (vidro frontal)", frontal_area_m2, contrapeso_unit, contrapeso_valor),
+        ("Contrapeso", frontal_area_m2, contrapeso_unit, contrapeso_valor),
         ("Revestimento", 1, revestimento_valor, revestimento_valor),
         ("Parafusos", 1, parafusos_valor, parafusos_valor),
     ]
@@ -331,3 +331,4 @@ import os
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))  # Render define a porta
     app.run(host="0.0.0.0", port=port, debug=True)
+
