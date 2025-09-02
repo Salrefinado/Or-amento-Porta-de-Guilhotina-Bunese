@@ -203,6 +203,91 @@ def calcular_custo_total(dados):
             "custo": custo
         })
 
+    # -------------------------
+    # Novos cálculos de custos solicitados
+    # -------------------------
+    porta = dados.get("porta", "Simples")
+    largura_porta = to_float(dados.get("largura", 0))
+    altura_boca = to_float(dados.get("altura_boca", 70))
+    vidro = dados.get("vidro", "Não")
+
+    # Cálculo da área frontal do vidro (m²) — será usada apenas para contrapeso
+    frontal_area_m2 = 0.0
+    if vidro != "Não":
+        altura_vidro_frontal = altura_boca + 5
+        if porta == "Simples":
+            largura_vidro_frontal = largura_porta - 4.5
+        elif porta in ["Em L Esquerda", "Em L Direita"]:
+            largura_vidro_frontal = largura_porta - 8.5
+        elif porta == "Em U":
+            largura_vidro_frontal = largura_porta - 8.5
+        else:
+            largura_vidro_frontal = 0
+
+        largura_vidro_frontal = max(0, largura_vidro_frontal)
+        frontal_area_m2 = (altura_vidro_frontal/100) * (largura_vidro_frontal/100)
+
+    # Mão de obra
+    mao_map = {
+        "Simples": 780,
+        "Em L Esquerda": 1080,
+        "Em L Direita": 1080,
+        "Em U": 1380,
+    }
+    mao_valor = mao_map.get(porta, 0)
+
+    # Consumíveis (fixo)
+    consumiveis_valor = 50
+
+    # Deslocação (fixo)
+    deslocacao_valor = 100
+
+    # Contrapeso (apenas vidro frontal) R$300 / m²
+    contrapeso_unit = 300
+    contrapeso_valor = frontal_area_m2 * contrapeso_unit
+
+    # Revestimento
+    revest_base_map = {
+        "Simples": 40,
+        "Em L Esquerda": 80,
+        "Em L Direita": 80,
+        "Em U": 120,
+    }
+    revest_base = revest_base_map.get(porta, 0)
+    revestimento_valor = revest_base + 1 * largura_porta
+
+    # Parafusos
+    parafusos_map = {
+        "Simples": 20,
+        "Em L Esquerda": 40,
+        "Em L Direita": 40,
+        "Em U": 60,
+    }
+    parafusos_valor = parafusos_map.get(porta, 0)
+
+    # Adiciona ao total e detalhamento
+    adicionais = [
+        ("Mão de obra", 1, mao_valor, mao_valor),
+        ("Consumíveis", 1, consumiveis_valor, consumiveis_valor),
+        ("Deslocação", 1, deslocacao_valor, deslocacao_valor),
+        ("Contrapeso (vidro frontal)", frontal_area_m2, contrapeso_unit, contrapeso_valor),
+        ("Revestimento", 1, revestimento_valor, revestimento_valor),
+        ("Parafusos", 1, parafusos_valor, parafusos_valor),
+    ]
+
+    for nome, qtd, unit, custo in adicionais:
+        # garantir números válidos
+        qtd = float(qtd)
+        unit = float(unit)
+        custo = float(custo)
+        custo_total += custo
+        detalhamento.append({
+            "item": nome,
+            "quantidade": qtd,
+            "preco_unit": unit,
+            "custo": custo
+        })
+
     return custo_total, detalhamento
 
 # -------------------------
@@ -246,9 +331,3 @@ import os
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))  # Render define a porta
     app.run(host="0.0.0.0", port=port, debug=True)
-
-
-
-
-
-
