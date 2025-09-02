@@ -9,7 +9,7 @@
     @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
 
     :root{
-      --bg-gradient: url('../imagens/fundo-metalico.png') center/cover no-repeat fixed;
+      --bg-gradient: url('imagens/fundo-metalico.png') center/cover no-repeat fixed;
       --card-max-width: 720px;
       --card-padding: 26px;
       --control-gap: 12px;
@@ -38,10 +38,9 @@
     .logo {
       display:flex;
       justify-content:center;
-      margin-bottom:16px;
     }
     .logo img {
-      max-width:140px;
+      max-width:160px;
       height:auto;
     }
 
@@ -142,8 +141,9 @@
   </style>
 </head>
 <body>
+
   <div class="logo">
-    <img src="../imagens/bunese-logo.png" alt="Logo Bunese">
+    <img src="imagens/bunese-logo.png" alt="Logo Bunese">
   </div>
 
   <div class="card" role="main" aria-labelledby="titulo">
@@ -265,7 +265,7 @@
   </script>
 
   <script>
-    // Toggle da visibilidade do campo 'Profundidade' conforme tipo de porta.
+    // Toggle da visibilidade do campo 'Profundidade'
     window.addEventListener('load', () => {
       const portaSelect = document.querySelector('select[name="porta"]');
       const profundInput = document.querySelector('input[name="profundidade"]');
@@ -281,7 +281,6 @@
           profundInput.required = true;
         }
       };
-
       toggleProfund();
       portaSelect.addEventListener('change', toggleProfund);
     });
