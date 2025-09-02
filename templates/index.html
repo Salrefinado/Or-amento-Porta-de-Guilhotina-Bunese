@@ -132,16 +132,6 @@
 
     <form method="POST" action="/calcular" novalidate>
       <div class="field">
-        <label class="field-label">Orçamento (ref):</label>
-        <input type="text" name="orcamento" value="{{ dados.orcamento or '' }}" />
-      </div>
-
-      <div class="field">
-        <label class="field-label">Nome do Cliente:</label>
-        <input type="text" name="cliente" value="{{ dados.cliente or '' }}" />
-      </div>
-
-      <div class="field">
         <label class="field-label">Tipo da Porta:</label>
         <select name="porta" required>
           {% set porta_sel = dados.get('porta', 'Simples') %}
@@ -174,20 +164,6 @@
       <div class="field">
         <label class="field-label">Profundidade Total (cm):</label>
         <input type="number" step="0.1" name="profundidade" required value="{{ dados.profundidade or '' }}">
-      </div>
-
-      <div class="field">
-        <label class="field-label">Pedra instalada:</label>
-        <select name="pedra" required>
-          {% set pedra_sel = dados.get('pedra', 'Não') %}
-          <option value="Não" {% if pedra_sel=='Não' %}selected{% endif %}>Não</option>
-          <option value="Sim" {% if pedra_sel=='Sim' %}selected{% endif %}>Sim</option>
-        </select>
-      </div>
-
-      <div class="field">
-        <label class="field-label">Altura da Boca (cm):</label>
-        <input type="number" step="0.1" name="altura_boca" value="{{ dados.altura_boca or 70 }}" required>
       </div>
 
       <div class="actions" aria-hidden="false">
@@ -275,4 +251,3 @@
   </script>
 </body>
 </html>
-
