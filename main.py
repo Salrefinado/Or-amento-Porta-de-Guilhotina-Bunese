@@ -127,11 +127,12 @@ def calcular_componentes(dados):
         placa = 0
 
     # -------------------------
-    # Vidro (m²)
+    # Vidro (m²) - agora separando vidro frontal e total
     # -------------------------
-    if vidro == "Não":
-        vidro_area = 0
-    else:
+    frontal_area = 0.0
+    lateral_area = 0.0
+    total_vidro_area = 0.0
+    if vidro != "Não":
         altura_vidro_frontal = altura_boca + 5
         if porta == "Simples":
             largura_vidro_frontal = largura_porta - 4.5
@@ -154,8 +155,13 @@ def calcular_componentes(dados):
             largura_vidro_lat = 0
             multiplicador = 0
 
-        vidro_area = (altura_vidro_frontal/100) * (largura_vidro_frontal/100)
-        vidro_area += multiplicador * (altura_vidro_lat/100) * (largura_vidro_lat/100)
+        largura_vidro_frontal = max(0, largura_vidro_frontal)
+        altura_vidro_lat = max(0, altura_vidro_lat)
+        largura_vidro_lat = max(0, largura_vidro_lat)
+
+        frontal_area = (altura_vidro_frontal/100) * (largura_vidro_frontal/100)
+        lateral_area = multiplicador * (altura_vidro_lat/100) * (largura_vidro_lat/100)
+        total_vidro_area = frontal_area + lateral_area
 
     # -------------------------
     # Arredondamento para 2 casas decimais sempre para cima
@@ -172,7 +178,11 @@ def calcular_componentes(dados):
         "Baguete Inox 1.5x1.5": ceil2(max(0, baguete)),
         "Metalon Inox 4x2": ceil2(max(0, mi42)),
         "Placa Cimentícia/m²": ceil2(max(0, placa)),
-        "Vidro": ceil2(max(0, vidro_area)),
+        # "Vidro" continua sendo a área TOTAL usada para cálculo do custo do vidro
+        "Vidro": ceil2(max(0, total_vidro_area)),
+        # Retorna também a área apenas do vidro FRONTAL em uma chave interna (começando com underscore)
+        # Essa chave não será incluída nos preços unitários, mas será usada para cálculos (contrapeso).
+        "_Vidro_frontal_m2": ceil2(max(0, frontal_area)),
     }
 
 def calcular_custo_total(dados):
@@ -192,7 +202,10 @@ def calcular_custo_total(dados):
     custo_total = 0.0
     detalhamento = []
 
-    for item, qtd in quantidades.items():
+    # Separar quantidades reais de materiais (ignorar chaves internas que começam com underscore)
+    materiais = {k: v for k, v in quantidades.items() if not str(k).startswith("_")}
+
+    for item, qtd in materiais.items():
         preco = precos.get(item, 0)
         custo = qtd * preco
         custo_total += custo
@@ -208,24 +221,9 @@ def calcular_custo_total(dados):
     # -------------------------
     porta = dados.get("porta", "Simples")
     largura_porta = to_float(dados.get("largura", 0))
-    altura_boca = to_float(dados.get("altura_boca", 70))
-    vidro = dados.get("vidro", "Não")
 
-    # Cálculo da área frontal do vidro (m²) — será usada apenas para contrapeso
-    frontal_area_m2 = 0.0
-    if vidro != "Não":
-        altura_vidro_frontal = altura_boca + 5
-        if porta == "Simples":
-            largura_vidro_frontal = largura_porta - 4.5
-        elif porta in ["Em L Esquerda", "Em L Direita"]:
-            largura_vidro_frontal = largura_porta - 8.5
-        elif porta == "Em U":
-            largura_vidro_frontal = largura_porta - 8.5
-        else:
-            largura_vidro_frontal = 0
-
-        largura_vidro_frontal = max(0, largura_vidro_frontal)
-        frontal_area_m2 = (altura_vidro_frontal/100) * (largura_vidro_frontal/100)
+    # Usa a área frontal já calculada em calcular_componentes (chave interna)
+    frontal_area_m2 = float(quantidades.get("_Vidro_frontal_m2", 0.0))
 
     # Mão de obra
     mao_map = {
@@ -331,4 +329,3 @@ import os
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))  # Render define a porta
     app.run(host="0.0.0.0", port=port, debug=True)
-
