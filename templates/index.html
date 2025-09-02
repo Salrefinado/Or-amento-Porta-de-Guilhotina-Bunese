@@ -1,280 +1,302 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Orçamento Porta de Guilhotina</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Orçamento Porta de Guilhotina</title>
 
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
 
-    :root{
-      --bg-gradient: linear-gradient(135deg,#00c6ff,#0072ff);
-      --card-max-width: 720px;
-      --card-padding: 26px;
-      --control-gap: 12px;
-      --field-height: 46px;
-      --radius: 12px;
-      --font-family: 'Roboto', sans-serif;
-    }
+    :root{
+      --bg-gradient: linear-gradient(135deg,#00c6ff,#0072ff);
+      --card-max-width: 720px;
+      --card-padding: 26px;
+      --control-gap: 12px;
+      --field-height: 46px;
+      --radius: 12px;
+      --font-family: 'Roboto', sans-serif;
+    }
 
-    /* Reset / base */
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body {
-      margin:0;
-      font-family: var(--font-family);
-      background: var(--bg-gradient);
-      -webkit-font-smoothing:antialiased;
-      display:flex;
-      justify-content:center;
-      align-items:flex-start;
-      padding:22px;
-    }
+    /* Reset / base */
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body {
+      margin:0;
+      font-family: var(--font-family);
+      /* Alteração aqui: fundo-metalico.png */
+      background: url('imagens/fundo-metalico.png') repeat;
+      background-size: cover;
+      -webkit-font-smoothing:antialiased;
+      display:flex;
+      justify-content:center;
+      align-items:flex-start;
+      padding:22px;
+    }
 
-    /* Card */
-    .card {
-      width: 100%;
-      max-width: var(--card-max-width);
-      background: #fff;
-      border-radius: var(--radius);
-      padding: calc(var(--card-padding));
-      box-shadow: 0 12px 30px rgba(0,0,0,0.18);
-    }
+    /* Card */
+    .card {
+      width: 100%;
+      max-width: var(--card-max-width);
+      background: #fff;
+      border-radius: var(--radius);
+      padding: calc(var(--card-padding));
+      box-shadow: 0 12px 30px rgba(0,0,0,0.18);
+    }
 
-    h2 {
-      color:#0072ff;
-      margin:0 0 14px 0;
-      font-size: 1.25rem;
-    }
+    h2 {
+      color:#0072ff;
+      margin:0 0 14px 0;
+      font-size: 1.25rem;
+    }
 
-    form { display:block; width:100% }
+    form { display:block; width:100% }
 
-    .field {
-      display:flex;
-      flex-direction:column;
-      gap:6px;
-      margin-bottom: var(--control-gap);
-    }
+    .field {
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+      margin-bottom: var(--control-gap);
+    }
 
-    label.field-label { font-weight:500; color:#333; font-size:0.95rem; }
+    label.field-label { font-weight:500; color:#333; font-size:0.95rem; }
 
-    input[type="text"], input[type="number"], select {
-      height: var(--field-height);
-      padding: 8px 12px;
-      border-radius: 8px;
-      border: 1px solid #d6dbe6;
-      font-size: 0.95rem;
-      outline: none;
-      width: 100%;
-    }
-    input[type="number"]::-webkit-inner-spin-button,
-    input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type="text"], input[type="number"], select {
+      height: var(--field-height);
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid #d6dbe6;
+      font-size: 0.95rem;
+      outline: none;
+      width: 100%;
+    }
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
 
-    /* Buttons stacked vertically */
-    .actions {
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-      margin-top:8px;
-    }
-    .btn {
-      height:48px;
-      border-radius:10px;
-      border:none;
-      cursor:pointer;
-      font-weight:700;
-      font-size:0.98rem;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      -webkit-appearance:none;
-      appearance:none;
-      text-decoration:none;
-      color:#fff;
-    }
-    .btn-primary { background:#0072ff; }
-    .btn-secondary { background:#999; }
+    /* Buttons stacked vertically */
+    .actions {
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      margin-top:8px;
+    }
+    .btn {
+      height:48px;
+      border-radius:10px;
+      border:none;
+      cursor:pointer;
+      font-weight:700;
+      font-size:0.98rem;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      -webkit-appearance:none;
+      appearance:none;
+      text-decoration:none;
+      color:#fff;
+    }
+    .btn-primary { background:#0072ff; }
+    .btn-secondary { background:#999; }
 
-    /* Resultado */
-    .resultado { margin-top:18px; font-size:0.95rem; color:#222; }
-    .total { font-size:1.05rem; color:#c00000; font-weight:800; margin-bottom:8px; }
-    .table-wrap { width:100%; overflow:auto; margin-top:8px; border-radius:8px; }
-    table { width:100%; border-collapse:collapse; min-width:600px; }
-    table th, table td { border:1px solid #eee; padding:8px 6px; text-align:left; font-size:0.92rem; }
-    table th { background:#f5f7fb; }
+    /* Resultado */
+    .resultado { margin-top:18px; font-size:0.95rem; color:#222; }
+    .total { font-size:1.05rem; color:#c00000; font-weight:800; margin-bottom:8px; }
+    .table-wrap { width:100%; overflow:auto; margin-top:8px; border-radius:8px; }
+    table { width:100%; border-collapse:collapse; min-width:600px; }
+    table th, table td { border:1px solid #eee; padding:8px 6px; text-align:left; font-size:0.92rem; }
+    table th { background:#f5f7fb; }
 
-    .erro { color:#fff; background:#c00000; padding:10px; border-radius:8px; margin-top:8px; }
+    .erro { color:#fff; background:#c00000; padding:10px; border-radius:8px; margin-top:8px; }
 
-    /* Small screens tweaks */
-    @media (max-width:420px){
-      :root{
-        --card-padding: 18px;
-        --control-gap: 10px;
-        --field-height:44px;
-      }
-      table { min-width:540px; }
-    }
+    /* Logo */
+    .logo-container {
+      text-align: center;
+      margin-bottom: 20px; /* Espaçamento entre a logo e o formulário */
+    }
+    .logo-container img {
+      max-width: 200px; /* Ajuste o tamanho máximo da logo */
+      height: auto;
+    }
 
-    /* Large screens */
-    @media (min-width:1200px){
-      :root{
-        --card-padding:32px;
-        --control-gap:14px;
-        --field-height:48px;
-        --card-max-width: 920px;
-      }
-    }
-  </style>
+    /* Small screens tweaks */
+    @media (max-width:420px){
+      :root{
+        --card-padding: 18px;
+        --control-gap: 10px;
+        --field-height:44px;
+      }
+      table { min-width:540px; }
+      .logo-container img {
+        max-width: 150px; /* Ajuste para telas menores */
+      }
+    }
+
+    /* Large screens */
+    @media (min-width:1200px){
+      :root{
+        --card-padding:32px;
+        --control-gap:14px;
+        --field-height:48px;
+        --card-max-width: 920px;
+      }
+      .logo-container img {
+        max-width: 250px; /* Ajuste para telas maiores */
+      }
+    }
+  </style>
 </head>
 <body>
-  <div class="card" role="main" aria-labelledby="titulo">
-    <h2 id="titulo">Formulário de Orçamento</h2>
+  <div class="card" role="main" aria-labelledby="titulo">
+        <div class="logo-container">
+      <img src="imagens/bunese-logo.png" alt="Logo Bunese">
+    </div>
 
-    <form method="POST" action="/calcular" novalidate>
-      <div class="field">
-        <label class="field-label">Tipo da Porta:</label>
-        <select name="porta" required>
-          {% set porta_sel = dados.get('porta', 'Simples') %}
-          <option value="Simples" {% if porta_sel=='Simples' %}selected{% endif %}>Simples</option>
-          <option value="Em L Esquerda" {% if porta_sel=='Em L Esquerda' %}selected{% endif %}>Em L Esquerda</option>
-          <option value="Em L Direita" {% if porta_sel=='Em L Direita' %}selected{% endif %}>Em L Direita</option>
-          <option value="Em U" {% if porta_sel=='Em U' %}selected{% endif %}>Em U</option>
-        </select>
-      </div>
+    <h2 id="titulo">Formulário de Orçamento</h2>
 
-      <div class="field">
-        <label class="field-label">Fechamento em Vidro:</label>
-        <select name="vidro" required>
-          {% set vidro_sel = dados.get('vidro', 'Sim') %}
-          <option value="Sim" {% if vidro_sel=='Sim' %}selected{% endif %}>Sim</option>
-          <option value="Não" {% if vidro_sel=='Não' %}selected{% endif %}>Não</option>
-        </select>
-      </div>
+    <form method="POST" action="/calcular" novalidate>
+      <div class="field">
+        <label class="field-label">Tipo da Porta:</label>
+        <select name="porta" required>
+          {% set porta_sel = dados.get('porta', 'Simples') %}
+          <option value="Simples" {% if porta_sel=='Simples' %}selected{% endif %}>Simples</option>
+          <option value="Em L Esquerda" {% if porta_sel=='Em L Esquerda' %}selected{% endif %}>Em L Esquerda</option>
+          <option value="Em L Direita" {% if porta_sel=='Em L Direita' %}selected{% endif %}>Em L Direita</option>
+          <option value="Em U" {% if porta_sel=='Em U' %}selected{% endif %}>Em U</option>
+        </select>
+      </div>
 
-      <div class="field">
-        <label class="field-label">Altura Total (cm):</label>
-        <input type="number" step="0.1" name="altura" required value="{{ dados.altura or '' }}">
-      </div>
+      <div class="field">
+        <label class="field-label">Fechamento em Vidro:</label>
+        <select name="vidro" required>
+          {% set vidro_sel = dados.get('vidro', 'Sim') %}
+          <option value="Sim" {% if vidro_sel=='Sim' %}selected{% endif %}>Sim</option>
+          <option value="Não" {% if vidro_sel=='Não' %}selected{% endif %}>Não</option>
+        </select>
+      </div>
 
-      <div class="field">
-        <label class="field-label">Largura da Porta (cm):</label>
-        <input type="number" step="0.1" name="largura" required value="{{ dados.largura or '' }}">
-      </div>
+      <div class="field">
+        <label class="field-label">Altura Total (cm):</label>
+        <input type="number" step="0.1" name="altura" required value="{{ dados.altura or '' }}">
+      </div>
 
-      <div class="field">
-        <label class="field-label">Profundidade Total (cm):</label>
-        <input type="number" step="0.1" name="profundidade" required value="{{ dados.profundidade or '' }}">
-      </div>
+      <div class="field">
+        <label class="field-label">Largura da Porta (cm):</label>
+        <input type="number" step="0.1" name="largura" required value="{{ dados.largura or '' }}">
+      </div>
 
-      <div class="actions" aria-hidden="false">
-        <button type="submit" class="btn btn-primary">Calcular Custo</button>
-        <a href="/" class="btn btn-secondary" role="button">Recalcular</a>
-      </div>
-    </form>
+      <div class="field">
+        <label class="field-label">Profundidade Total (cm):</label>
+        <input type="number" step="0.1" name="profundidade" required value="{{ dados.profundidade or '' }}">
+      </div>
 
-    {% if resultado %}
-      {% if resultado.erro %}
-        <div class="erro" role="alert">{{ resultado.mensagem }}</div>
-      {% else %}
-        <div class="resultado" aria-live="polite">
-          <div class="total">Custo de Produção: {{ resultado.custo_total_fmt }}</div>
+      <div class="actions" aria-hidden="false">
+        <button type="submit" class="btn btn-primary">Calcular Custo</button>
+        <a href="/" class="btn btn-secondary" role="button">Recalcular</a>
+      </div>
+    </form>
 
-          <div><strong>Detalhamento:</strong></div>
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr><th>Item</th><th>Quantidade (m ou m²)</th><th>Preço unitário</th><th>Custo</th></tr>
-              </thead>
-              <tbody>
-              {% for d in resultado.detalhamento %}
-                <tr>
-                  <td>{{ d.item }}</td>
-                  <td style="width:140px">{{ d.quantidade }}</td>
-                  <td style="width:140px">{{ d.preco_unit }}</td>
-                  <td style="width:160px">{{ d.custo }}</td>
-                </tr>
-              {% endfor %}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      {% endif %}
-    {% endif %}
-  </div>
+    {% if resultado %}
+      {% if resultado.erro %}
+        <div class="erro" role="alert">{{ resultado.mensagem }}</div>
+      {% else %}
+        <div class="resultado" aria-live="polite">
+          <div class="total">Custo de Produção: {{ resultado.custo_total_fmt }}</div>
 
-  <script>
-    // Ajusta variáveis CSS e font-size base conforme window.innerWidth
-    (function(){
-      const root = document.documentElement;
+          <div><strong>Detalhamento:</strong></div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>Item</th><th>Quantidade (m ou m²)</th><th>Preço unitário</th><th>Custo</th></tr>
+              </thead>
+              <tbody>
+              {% for d in resultado.detalhamento %}
+                <tr>
+                  <td>{{ d.item }}</td>
+                  <td style="width:140px">{{ d.quantidade }}</td>
+                  <td style="width:140px">{{ d.preco_unit }}</td>
+                  <td style="width:160px">{{ d.custo }}</td>
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      {% endif %}
+    {% endif %}
+  </div>
 
-      function adjustLayout(){
-        const w = window.innerWidth;
-        // Ajuste simples por faixas para compatibilidade iPhone/desktop
-        let baseFont;
-        if (w <= 420) {
-          baseFont = 15;              // iPhone portrait
-          root.style.setProperty('--card-max-width', '96vw');
-          root.style.setProperty('--card-padding', '18px');
-          root.style.setProperty('--control-gap', '10px');
-        } else if (w <= 900) {
-          baseFont = 16;
-          root.style.setProperty('--card-max-width', '720px');
-          root.style.setProperty('--card-padding', '22px');
-          root.style.setProperty('--control-gap', '12px');
-        } else if (w <= 1400) {
-          baseFont = 17;
-          root.style.setProperty('--card-max-width', '860px');
-          root.style.setProperty('--card-padding', '26px');
-          root.style.setProperty('--control-gap', '13px');
-        } else {
-          baseFont = 18;
-          root.style.setProperty('--card-max-width', '920px');
-          root.style.setProperty('--card-padding', '32px');
-          root.style.setProperty('--control-gap', '14px');
-        }
+  <script>
+    // Ajusta variáveis CSS e font-size base conforme window.innerWidth
+    (function(){
+      const root = document.documentElement;
 
-        // aplica font-size base (uso em rems no CSS)
-        root.style.fontSize = baseFont + "px";
+      function adjustLayout(){
+        const w = window.innerWidth;
+        // Ajuste simples por faixas para compatibilidade iPhone/desktop
+        let baseFont;
+        if (w <= 420) {
+          baseFont = 15;              // iPhone portrait
+          root.style.setProperty('--card-max-width', '96vw');
+          root.style.setProperty('--card-padding', '18px');
+          root.style.setProperty('--control-gap', '10px');
+        } else if (w <= 900) {
+          baseFont = 16;
+          root.style.setProperty('--card-max-width', '720px');
+          root.style.setProperty('--card-padding', '22px');
+          root.style.setProperty('--control-gap', '12px');
+        } else if (w <= 1400) {
+          baseFont = 17;
+          root.style.setProperty('--card-max-width', '860px');
+          root.style.setProperty('--card-padding', '26px');
+          root.style.setProperty('--control-gap', '13px');
+        } else {
+          baseFont = 18;
+          root.style.setProperty('--card-max-width', '920px');
+          root.style.setProperty('--card-padding', '32px');
+          root.style.setProperty('--control-gap', '14px');
+        }
 
-        // pequenas melhorias de toque em telas pequenas
-        if (w <= 420) {
-          root.style.setProperty('--field-height', '44px');
-        } else {
-          root.style.setProperty('--field-height', '46px');
-        }
-      }
+        // aplica font-size base (uso em rems no CSS)
+        root.style.fontSize = baseFont + "px";
 
-      window.addEventListener('resize', adjustLayout, { passive: true });
-      window.addEventListener('orientationchange', adjustLayout);
-      window.addEventListener('load', adjustLayout);
-    })();
-  </script>
+        // pequenas melhorias de toque em telas pequenas
+        if (w <= 420) {
+          root.style.setProperty('--field-height', '44px');
+        } else {
+          root.style.setProperty('--field-height', '46px');
+        }
+      }
 
-  <script>
-    // Toggle da visibilidade do campo 'Profundidade' conforme tipo de porta.
-    // O campo é escondido quando 'Simples' e mostrado para os demais tipos.
-    // Mantém a posição e o tamanho dos demais campos: apenas altera display do próprio field.
-    window.addEventListener('load', () => {
-      const portaSelect = document.querySelector('select[name="porta"]');
-      const profundInput = document.querySelector('input[name="profundidade"]');
-      if (!portaSelect || !profundInput) return;
-      const profundField = profundInput.closest('.field');
+      window.addEventListener('resize', adjustLayout, { passive: true });
+      window.addEventListener('orientationchange', adjustLayout);
+      window.addEventListener('load', adjustLayout);
+    })();
+  </script>
 
-      const toggleProfund = () => {
-        if (portaSelect.value === 'Simples') {
-          profundField.style.display = 'none';
-          profundInput.required = false;
-        } else {
-          profundField.style.display = 'flex';
-          profundInput.required = true;
-        }
-      };
+  <script>
+    // Toggle da visibilidade do campo 'Profundidade' conforme tipo de porta.
+    // O campo é escondido quando 'Simples' e mostrado para os demais tipos.
+    // Mantém a posição e o tamanho dos demais campos: apenas altera display do próprio field.
+    window.addEventListener('load', () => {
+      const portaSelect = document.querySelector('select[name="porta"]');
+      const profundInput = document.querySelector('input[name="profundidade"]');
+      if (!portaSelect || !profundInput) return;
+      const profundField = profundInput.closest('.field');
 
-      // inicializa conforme valor atual (útil quando o template já traz um valor selecionado)
-      toggleProfund();
-      portaSelect.addEventListener('change', toggleProfund);
-    });
-  </script>
+      const toggleProfund = () => {
+        if (portaSelect.value === 'Simples') {
+          profundField.style.display = 'none';
+          profundInput.required = false;
+        } else {
+          profundField.style.display = 'flex';
+          profundInput.required = true;
+        }
+      };
+
+      // inicializa conforme valor atual (útil quando o template já traz um valor selecionado)
+      toggleProfund();
+      portaSelect.addEventListener('change', toggleProfund);
+    });
+  </script>
 </body>
 </html>
