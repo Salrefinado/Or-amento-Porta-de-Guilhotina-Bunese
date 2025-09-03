@@ -275,15 +275,36 @@ def calcular_custo_total(dados):
     }
     parafusos_valor = parafusos_map.get(porta, 0)
 
-    # Adiciona ao total e detalhamento
-    adicionais = [
-        ("Mão de obra", 1, mao_valor, mao_valor),
-        ("Consumíveis", 1, consumiveis_valor, consumiveis_valor),
-        ("Instalação", 1, instalacao_valor, instalacao_valor),
-        ("Contrapeso (vidro frontal)", frontal_area_m2, contrapeso_unit, contrapeso_valor),
-        ("Revestimento", 1, revestimento_valor, revestimento_valor),
-        ("Parafusos", 1, parafusos_valor, parafusos_valor),
-    ]
+    # Definição das horas de mão de obra
+if porta == "Simples":
+    mao_horas = 17
+elif porta in ["Em L Esquerda", "Em L Direita"]:
+    mao_horas = 23
+elif porta == "Em U":
+    mao_horas = 29
+else:
+    mao_horas = 0
+
+# Definição das horas de instalação
+if porta == "Simples":
+    instalacao_horas = 6 if largura_porta <= 70 else 7
+elif porta in ["Em L Esquerda", "Em L Direita"]:
+    instalacao_horas = 8 if largura_porta <= 70 else 9
+elif porta == "Em U":
+    instalacao_horas = 10 if largura_porta <= 70 else 11
+else:
+    instalacao_horas = 0
+
+# Adiciona ao total e detalhamento
+adicionais = [
+    ("Mão de obra", f"{mao_horas} h", mao_valor, mao_valor),
+    ("Consumíveis", 1, consumiveis_valor, consumiveis_valor),
+    ("Instalação", f"{instalacao_horas} h", instalacao_valor, instalacao_valor),
+    ("Contrapeso (vidro frontal)", frontal_area_m2, contrapeso_unit, contrapeso_valor),
+    ("Revestimento", 1, revestimento_valor, revestimento_valor),
+    ("Parafusos", 1, parafusos_valor, parafusos_valor),
+]
+
 
     for nome, qtd, unit, custo in adicionais:
         # garantir números válidos
@@ -339,3 +360,4 @@ def calcular():
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))  # Render define a porta
     app.run(host="0.0.0.0", port=port, debug=True)
+
