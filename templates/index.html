@@ -24,8 +24,8 @@
     body {
       margin:0;
       font-family: var(--font-family);
-      /* alterado: usar imagem de fundo localizada em /imagens/fundo-metalico.png */
-      background: url("imagens/fundo-metalico.png") no-repeat center center fixed;
+      /* fundo via static (usar url_for do Flask) */
+      background: url("{{ url_for('static', filename='imagens/fundo-metalico.png') }}") no-repeat center center fixed;
       background-size: cover;
       -webkit-font-smoothing:antialiased;
       display:flex;
@@ -131,9 +131,9 @@
 </head>
 <body>
   <div class="card" role="main" aria-labelledby="titulo">
-    <!-- adicionado: logo da empresa (arquivo imagens/bunese-logo.png) -->
+    <!-- logo via static -->
     <div style="text-align:center; margin-bottom:18px;">
-      <img src="imagens/bunese-logo.png" alt="Logo Bunese" style="max-width:180px; height:auto;">
+      <img src="{{ url_for('static', filename='imagens/bunese-logo.png') }}" alt="Logo Bunese" style="max-width:180px; height:auto;">
     </div>
 
     <h2 id="titulo">Formulário de Orçamento</h2>
