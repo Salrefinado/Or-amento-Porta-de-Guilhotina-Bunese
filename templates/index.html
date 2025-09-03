@@ -9,7 +9,7 @@
     @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
 
     :root{
-      --bg-gradient: url('imagens/fundo-metalico.png') center/cover no-repeat fixed;
+      --bg-gradient: linear-gradient(135deg,#00c6ff,#0072ff);
       --card-max-width: 720px;
       --card-padding: 26px;
       --control-gap: 12px;
@@ -24,24 +24,14 @@
     body {
       margin:0;
       font-family: var(--font-family);
-      background: var(--bg-gradient);
+      /* alterado: usar imagem de fundo localizada em /imagens/fundo-metalico.png */
+      background: url("imagens/fundo-metalico.png") no-repeat center center fixed;
+      background-size: cover;
       -webkit-font-smoothing:antialiased;
       display:flex;
       justify-content:center;
       align-items:flex-start;
       padding:22px;
-      flex-direction:column;
-      gap:18px;
-    }
-
-    /* Logo */
-    .logo {
-      display:flex;
-      justify-content:center;
-    }
-    .logo img {
-      max-width:160px;
-      height:auto;
     }
 
     /* Card */
@@ -126,7 +116,6 @@
         --field-height:44px;
       }
       table { min-width:540px; }
-      .logo img { max-width:120px; }
     }
 
     /* Large screens */
@@ -141,12 +130,12 @@
   </style>
 </head>
 <body>
-
-  <div class="logo">
-    <img src="imagens/bunese-logo.png" alt="Logo Bunese">
-  </div>
-
   <div class="card" role="main" aria-labelledby="titulo">
+    <!-- adicionado: logo da empresa (arquivo imagens/bunese-logo.png) -->
+    <div style="text-align:center; margin-bottom:18px;">
+      <img src="imagens/bunese-logo.png" alt="Logo Bunese" style="max-width:180px; height:auto;">
+    </div>
+
     <h2 id="titulo">Formulário de Orçamento</h2>
 
     <form method="POST" action="/calcular" novalidate>
@@ -228,9 +217,10 @@
 
       function adjustLayout(){
         const w = window.innerWidth;
+        // Ajuste simples por faixas para compatibilidade iPhone/desktop
         let baseFont;
         if (w <= 420) {
-          baseFont = 15;
+          baseFont = 15;              // iPhone portrait
           root.style.setProperty('--card-max-width', '96vw');
           root.style.setProperty('--card-padding', '18px');
           root.style.setProperty('--control-gap', '10px');
@@ -250,7 +240,11 @@
           root.style.setProperty('--card-padding', '32px');
           root.style.setProperty('--control-gap', '14px');
         }
+
+        // aplica font-size base (uso em rems no CSS)
         root.style.fontSize = baseFont + "px";
+
+        // pequenas melhorias de toque em telas pequenas
         if (w <= 420) {
           root.style.setProperty('--field-height', '44px');
         } else {
@@ -265,7 +259,9 @@
   </script>
 
   <script>
-    // Toggle da visibilidade do campo 'Profundidade'
+    // Toggle da visibilidade do campo 'Profundidade' conforme tipo de porta.
+    // O campo é escondido quando 'Simples' e mostrado para os demais tipos.
+    // Mantém a posição e o tamanho dos demais campos: apenas altera display do próprio field.
     window.addEventListener('load', () => {
       const portaSelect = document.querySelector('select[name="porta"]');
       const profundInput = document.querySelector('input[name="profundidade"]');
@@ -281,6 +277,8 @@
           profundInput.required = true;
         }
       };
+
+      // inicializa conforme valor atual (útil quando o template já traz um valor selecionado)
       toggleProfund();
       portaSelect.addEventListener('change', toggleProfund);
     });
