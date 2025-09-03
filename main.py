@@ -3,9 +3,6 @@ from markupsafe import escape
 import math
 import os
 
-# Configuração: usar a pasta 'templates/static' como static_folder
-# (assim você NÃO precisa mover os arquivos agora; se preferir a estrutura padrão,
-# basta mover as imagens para 'static/imagens' e alterar para app = Flask(__name__))
 app = Flask(__name__, static_folder='templates/static', template_folder='templates')
 
 def to_float(val, default=0.0):
@@ -229,7 +226,7 @@ def calcular_custo_total(dados):
     # Usa a área frontal já calculada em calcular_componentes (chave interna)
     frontal_area_m2 = float(quantidades.get("_Vidro_frontal_m2", 0.0))
 
-    # Mão de obra
+    # Mão de obra: valores TOTAIS (em R$) conforme seu mapa
     mao_map = {
         "Simples": 780,
         "Em L Esquerda": 1080,
@@ -238,25 +235,37 @@ def calcular_custo_total(dados):
     }
     mao_valor = mao_map.get(porta, 0)
 
+    # Horas declaradas de mão de obra (usadas como quantidade)
+    horas_mao_map = {
+        "Simples": 17,
+        "Em L Esquerda": 23,
+        "Em L Direita": 23,
+        "Em U": 29,
+    }
+    horas_mao = horas_mao_map.get(porta, 0)
+
     # Consumíveis (fixo)
     consumiveis_valor = 50
 
-    # Instalação (substitui a antiga Deslocação) - tabela por tipo e largura
-    # Valores em R$ conforme especificado pelo usuário
+    # Instalação - tabela por tipo e largura (valor total em R$)
     if porta == "Simples":
         instalacao_valor = 390 if largura_porta <= 70 else 430
+        instalacao_horas = 6 if largura_porta <= 70 else 7
     elif porta in ["Em L Esquerda", "Em L Direita"]:
         instalacao_valor = 470 if largura_porta <= 70 else 550
+        instalacao_horas = 8 if largura_porta <= 70 else 9
     elif porta == "Em U":
         instalacao_valor = 600 if largura_porta <= 70 else 700
+        instalacao_horas = 10 if largura_porta <= 70 else 11
     else:
         instalacao_valor = 0
+        instalacao_horas = 0
 
     # Contrapeso (apenas vidro frontal) R$300 / m²
     contrapeso_unit = 300
     contrapeso_valor = frontal_area_m2 * contrapeso_unit
 
-    # Revestimento
+    # Revestimento (valor total já calculado como base + largura)
     revest_base_map = {
         "Simples": 40,
         "Em L Esquerda": 80,
@@ -266,7 +275,7 @@ def calcular_custo_total(dados):
     revest_base = revest_base_map.get(porta, 0)
     revestimento_valor = revest_base + 1 * largura_porta
 
-    # Parafusos
+    # Parafusos (valor fixo)
     parafusos_map = {
         "Simples": 20,
         "Em L Esquerda": 40,
@@ -275,36 +284,44 @@ def calcular_custo_total(dados):
     }
     parafusos_valor = parafusos_map.get(porta, 0)
 
-    # Definição das horas de mão de obra
-if porta == "Simples":
-    mao_horas = 17
-elif porta in ["Em L Esquerda", "Em L Direita"]:
-    mao_horas = 23
-elif porta == "Em U":
-    mao_horas = 29
-else:
-    mao_horas = 0
+    # -------------------------
+    # Calcular preço unitário por hora para Mão de obra e Instalação
+    # -------------------------
+    # Preço unitário da mão de obra = mao_valor / horas_mao
+    if horas_mao and horas_mao > 0:
+        mao_preco_unit = float(mao_valor) / float(horas_mao)
+    else:
+        # Se horas inválidas, manter o valor total como custo e exibir unitário igual ao total
+        mao_preco_unit = float(mao_valor)
+        # garantir horas_mao não seja zero para evitar divisão posterior - mantemos 1 como fallback
+        if horas_mao == 0:
+            horas_mao = 1
 
-# Definição das horas de instalação
-if porta == "Simples":
-    instalacao_horas = 6 if largura_porta <= 70 else 7
-elif porta in ["Em L Esquerda", "Em L Direita"]:
-    instalacao_horas = 8 if largura_porta <= 70 else 9
-elif porta == "Em U":
-    instalacao_horas = 10 if largura_porta <= 70 else 11
-else:
-    instalacao_horas = 0
+    # Preço unitário da instalação = instalacao_valor / instalacao_horas
+    if instalacao_horas and instalacao_horas > 0:
+        instal_preco_unit = float(instalacao_valor) / float(instalacao_horas)
+    else:
+        instal_preco_unit = float(instalacao_valor)
+        if instalacao_horas == 0:
+            instalacao_horas = 1  # fallback (situação improvável)
 
-# Adiciona ao total e detalhamento
-adicionais = [
-    ("Mão de obra", f"{mao_horas} h", mao_valor, mao_valor),
-    ("Consumíveis", 1, consumiveis_valor, consumiveis_valor),
-    ("Instalação", f"{instalacao_horas} h", instalacao_valor, instalacao_valor),
-    ("Contrapeso (vidro frontal)", frontal_area_m2, contrapeso_unit, contrapeso_valor),
-    ("Revestimento", 1, revestimento_valor, revestimento_valor),
-    ("Parafusos", 1, parafusos_valor, parafusos_valor),
-]
-
+    # -------------------------
+    # Adicionais (com quantidade e preco_unit ajustados)
+    # -------------------------
+    adicionais = [
+        # Mão de obra: quantidade = horas declaradas, preco_unit = valor por hora, custo = mao_valor (total)
+        ("Mão de obra", float(horas_mao), mao_preco_unit, float(mao_valor)),
+        # Consumíveis mantidos como 1 unidade
+        ("Consumíveis", 1.0, float(consumiveis_valor), float(consumiveis_valor)),
+        # Instalação: quantidade = horas de instalação, preco_unit = valor por hora, custo = instalacao_valor (total)
+        ("Instalação", float(instalacao_horas), instal_preco_unit, float(instalacao_valor)),
+        # Contrapeso: quantidade = m² frontal, preco_unit = contrapeso_unit, custo = contrapeso_valor
+        ("Contrapeso (vidro frontal)", float(frontal_area_m2), float(contrapeso_unit), float(contrapeso_valor)),
+        # Revestimento: mantido como valor total (quantidade 1)
+        ("Revestimento", 1.0, float(revestimento_valor), float(revestimento_valor)),
+        # Parafusos: mantido como valor total (quantidade 1)
+        ("Parafusos", 1.0, float(parafusos_valor), float(parafusos_valor)),
+    ]
 
     for nome, qtd, unit, custo in adicionais:
         # garantir números válidos
@@ -360,4 +377,3 @@ def calcular():
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))  # Render define a porta
     app.run(host="0.0.0.0", port=port, debug=True)
-
