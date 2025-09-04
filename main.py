@@ -359,9 +359,22 @@ def calcular():
     def fmt(val):
         return f"R$ {val:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
 
+    # NOVOS VALORES: Valor de venda e Lucro
+    # Valor de venda = Custo de produção + 130% -> multiplicador 1 + 1.3 = 2.3
+    valor_venda = float(custo_total) * 2.3
+    # Lucro = Valor de venda - 10% - Custo de produção
+    # Interpretação: subtrai 10% sobre o valor de venda, depois subtrai o custo de produção
+    desconto_10 = valor_venda * 0.10
+    lucro = valor_venda - desconto_10 - float(custo_total)
+    # (equivalente a lucro = 0.9 * valor_venda - custo_total)
+
     resumo = {
         "custo_total": custo_total,
         "custo_total_fmt": fmt(custo_total),
+        "valor_venda": valor_venda,
+        "valor_venda_fmt": fmt(valor_venda),
+        "lucro": lucro,
+        "lucro_fmt": fmt(lucro),
         "detalhamento": [
             {
                 "item": d["item"],
