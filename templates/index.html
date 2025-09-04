@@ -100,7 +100,10 @@
 
     /* Resultado */
     .resultado { margin-top:18px; font-size:0.95rem; color:#222; }
-    .total { font-size:1.05rem; color:#c00000; font-weight:800; margin-bottom:8px; }
+    .total { font-size:1.05rem; color:#c00000; font-weight:800; margin-bottom:8px; } /* vermelho */
+    .valor-venda { font-size:1.05rem; color:#1b8a3e; font-weight:800; margin-bottom:6px; } /* verde */
+    .lucro { font-size:1.05rem; color:#1b8a3e; font-weight:800; margin-bottom:8px; } /* verde */
+
     .table-wrap { width:100%; overflow:auto; margin-top:8px; border-radius:8px; }
     table { width:100%; border-collapse:collapse; min-width:600px; }
     table th, table td { border:1px solid #eee; padding:8px 6px; text-align:left; font-size:0.92rem; }
@@ -185,9 +188,17 @@
         <div class="erro" role="alert">{{ resultado.mensagem }}</div>
       {% else %}
         <div class="resultado" aria-live="polite">
-          <div class="total">Custo de Produção: {{ resultado.custo_total_fmt }}</div>
+          <div class="total" title="Custo de Produção (custo_total)">Custo de Produção: {{ resultado.custo_total_fmt }}</div>
 
-          <div><strong>Detalhamento:</strong></div>
+          <!-- NOVOS CAMPOS: Valor de venda e Lucro -->
+          <div class="valor-venda" title="Valor de venda (Custo + 130%)">Valor de Venda: {{ resultado.valor_venda_fmt }}</div>
+          <div class="lucro" title="Lucro (Valor de venda - 10% - Custo de produção)">Lucro: {{ resultado.lucro_fmt }}</div>
+
+          <div style="font-size:0.88rem; color:#555; margin-top:6px;">
+            <strong>Observação:</strong> Valor de venda = Custo de produção + 130%. Em seguida consideramos redução de 10% sobre o valor de venda para cálculo do lucro.
+          </div>
+
+          <div style="margin-top:10px"><strong>Detalhamento:</strong></div>
           <div class="table-wrap">
             <table>
               <thead>
@@ -285,6 +296,3 @@
   </script>
 </body>
 </html>
-
-
-
